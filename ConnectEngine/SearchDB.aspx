@@ -34,14 +34,27 @@
                 "<",
                 ">=",
                 "<=",
-                "BETWEEN"
+                "BETWEEN",
+                "NOT BETWEEN"
         ];
         var stringCondition = [
                 "LIKE",
                 "NOT LIKE",
                 "<>",
                 "=",
-                "BETWEEN"
+                "BETWEEN",
+                "NOT BETWEEN"
+        ];
+        var wildcard = [
+                "%str",
+                "str%",
+                "%str%",
+                "_str",
+                "str_",
+                "[str]%",
+                "%[str]",
+                "[!str]%",
+                "%[!str]"
         ];
         function GetColumnName()
         {
@@ -74,6 +87,9 @@
             
         }
         $(document).ready(function () {
+            var watermark = 'Enter maximum value';
+
+            //init, set watermark text and class
             
         });
         function selectAll(elm) {
@@ -131,6 +147,7 @@
         {
             //var all = "";
             $('#wherePortion').empty();
+            $('#textBox').empty();
             $('#wherePortion').append('<p>'+
                 '<label>Column Name:</label><br />'+
                 '<select id="columnDropDown" class="dropDownListStyles" onchange="GetExpression()"></select>' +
@@ -139,10 +156,13 @@
                 '<label>Condition:</label><br />' +
                 '<select id="conditionDropDown" class="dropDownListStyles" disabled="disabled" onchange="EnableText()"></select>' +
             '</p>');
+<<<<<<< HEAD
             $('#wherePortion').append('<p>' +
                 '<label>Value:</label><br />' +
                 '<input id="valueText" type="text" class="textBoxStyles" disabled="disabled" onblur="TakeData()" />' +
             '</p><br/><hr class="hrStyle"/>');
+=======
+>>>>>>> 9d644ea7cfb3b23ec9a4a412aab0deb855b87694
             var val = "";
             var text = "";
             $('#columnDropDown').removeOption(/./).addOption('', '---Please Select---');
@@ -151,6 +171,11 @@
                 text = tables[i].ColName;
                 $('#columnDropDown').append(new Option(text, val, true, true));
             }
+        }
+        function regIsNumber(fData)
+        {
+            var reg = new RegExp("^[-]?[0-9]+[\.]?[0-9]+$");
+            return reg.test(fData)
         }
         function GetExpression()
         {
@@ -175,21 +200,103 @@
         {
             alert(buttonType);
         }
+        function ValidateText(valueText)
+        {
+            var conditionText;
+            if (jQuery.inArray($("#columnDropDown option:selected").val(), numAndDate) > 0) {
+                var num = /^[-+]?[0-9]+(?:\.[0-9]+)?$/;
+                if (num.test(valueText)) {
+                    conditionText = valueText;
+                }
+                else {
+                    alert("Please enter valid number in the textbox");
+                    return false;
+                }
+            }
+            else {
+                conditionText = "'" + valueText + "'"
+            }
+            return conditionText;
+        }
         function TakeData()
         {
-            if ($('#valueText').val().length > 0) {
-                queryString = queryString.split(' WHERE')[0];
-                queryString = queryString + " WHERE " + $('#columnDropDown option:selected').text() +" "+ $('#conditionDropDown').val() + " " + $('#valueText').val();
-                $("#<%=queryTextBox.ClientID%>").val(queryString);
+            var checkedConditionText;
+            if ($('#conditionDropDown').val() == "BETWEEN" || $('#conditionDropDown').val() == "NOT BETWEEN")
+            {
+                if ($('#val1').val().length == 0 || $('#val2').val().length == 0) {
+                    alert("Incomplete Where clause");
+                    return false;
+                }
+                else {
+                    checkedConditionText = ValidateText($('#val1').val()) + " AND " + ValidateText($('#val2').val());
+                }
+            }
+            else if ($('#conditionDropDown').val() == "LIKE" || $('#conditionDropDown').val() == "NOT LIKE")
+            {
+                if ($('#likeValueText').val().length > 0)
+                {
+                    var str = "'"+$('#wildcardDropDown').val()+"'";
+                    checkedConditionText = str.replace('str', $('#likeValueText').val());
+                }
+                else
+                {
+                    alert("No value in the textbox");
+                    return false;
+                }
             }
             else
             {
-                alert("Incomplete Where clause");
+                if ($('#valueText').val().length > 0) {
+                    checkedConditionText = ValidateText($('#valueText').val());
+                }
+                else {
+                    alert("Incomplete Where clause");
+                    return false;
+                }
             }
+            queryString = queryString.split(' WHERE')[0];
+            queryString = queryString + " WHERE " + $('#columnDropDown option:selected').text() + " " + $('#conditionDropDown').val() + " " + checkedConditionText;
+            $("#<%=queryTextBox.ClientID%>").val(queryString);
         }
         function EnableText()
         {
-            $('#valueText').attr('disabled',false);
+            $('#textBox').empty();
+            //$('#valueText').attr('disabled', false);
+            if ($('#conditionDropDown').val() == "BETWEEN" || $('#conditionDropDown').val() == "NOT BETWEEN") {
+                //alert("between");
+                $('#textBox').append('<p>' +
+               '<label>Value 1:</label><br />' +
+               '<input id="val1" type="text" />' +
+               '</p>');
+                $('#textBox').append('<p id="andOption">' +
+               '<label>AND</label>');
+                $('#textBox').append('<p>' +
+                '<label>Value 2:</label><br />' +
+                '<input id="val2" type="text" onblur="TakeData()" />' +
+                '</p><br/><hr/>');
+            }
+            else if ($('#conditionDropDown').val() == "LIKE" || $('#conditionDropDown').val() == "NOT LIKE")
+            {
+                $('#textBox').append('<p>' +
+                '<label>Value:</label><br />' +
+                '<input id="likeValueText" type="text" onblur="TakeData()" />' +
+                '</p><br/>');
+                $('#textBox').append('<p>' +
+                '<label>Select a wildcard:</label><br />' +
+                '<select id="wildcardDropDown" onchange="TakeData()"></select>' +
+            '</p><hr/>');
+                var itemNumber = wildcard.length;
+                for (var i = 0; i < itemNumber; i++) {
+                    $('#wildcardDropDown').append(new Option(wildcard[i], wildcard[i], true, true));
+                }
+
+            }
+            else {
+                $('#textBox').append('<p>' +
+                '<label>Value:</label><br />' +
+                '<input id="valueText" type="text" onblur="TakeData()" />' +
+                '</p><br/><hr/>');
+            }
         }
     </script>
 
@@ -201,6 +308,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
+<<<<<<< HEAD
         
         <div id="mainBody" runat="server">
             <h1> SQL Generator</h1>
@@ -258,6 +366,63 @@
                         </div>
                 </asp:Panel>   
             </asp:Panel>
+=======
+        <h1> SQL Generator</h1>
+        <div id="mainBody">
+            <div id="mainContents">
+                <asp:Label ID="sqlStatus" runat="server" Text=""></asp:Label>
+                <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+                <div>
+                    <asp:Button ID="connect" CssClass="buttonStyle" runat="server" Text="Establish Connection" OnClick="connect_Click" />
+                    <br />
+                    <asp:DropDownList ID="dbNameDropDown" runat="server" OnSelectedIndexChanged="dbNameDropDown_SelectedIndexChanged" AutoPostBack="True">
+                    </asp:DropDownList>
+                    <hr />
+                </div>
+                <div class="selectQuery">
+                    <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
+                       <ContentTemplate>
+                           <div>
+                               <p>From :</p>
+                               <asp:DropDownList ID="tableNameDropDown" runat="server"></asp:DropDownList>
+                               <div id="checkList" class="selectQuery">
+                               </div>
+                           </div>
+                           </ContentTemplate>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="dbNameDropDown" EventName="SelectedIndexChanged" />
+                        </Triggers>
+                    </asp:UpdatePanel>
+                           <br />
+                           <hr />
+                           <input id="whereButton" type="button" value="WHERE" disabled="disabled" onclick="WhereButtonClick()" />
+                           <div id ="wherePortion" class="selectQuery">
+                           </div>
+                           <div id="textBox">
+                           </div>
+                           <br />
+                            <input id="andButton" type="button" value="AND" onclick="AndOrButton($(this).val())" />
+                            <input id="orButton" type="button" value="OR" onclick="AndOrButton($(this).val())" />
+                           <div id="andOrPortion">
+                           </div>
+                    <br />
+                    <hr />
+                    <div id="outputText">
+                        <p>Query string :</p>
+                        <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled"></asp:TextBox>
+                        <asp:Button ID="resultButton" runat="server" Text="Get Result" OnClick="resultButton_Click" />
+                    </div>
+                    <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <asp:GridView ID="resultGrid" runat="server"></asp:GridView>
+                        </ContentTemplate>
+                        <Triggers>
+                            <asp:AsyncPostBackTrigger ControlID="resultButton" EventName="Click" />
+                        </Triggers>
+                    </asp:UpdatePanel>
+                </div>           
+            </div>
+>>>>>>> 9d644ea7cfb3b23ec9a4a412aab0deb855b87694
          </div>
     </form>
 </body>
