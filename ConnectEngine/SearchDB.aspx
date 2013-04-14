@@ -74,6 +74,9 @@
             
         }
         $(document).ready(function () {
+            var watermark = 'Enter maximum value';
+
+            //init, set watermark text and class
             
         });
         function selectAll(elm) {
@@ -131,6 +134,7 @@
         {
             //var all = "";
             $('#wherePortion').empty();
+            $('#textBox').empty();
             $('#wherePortion').append('<p>'+
                 '<label>Column Name:</label><br />'+
                 '<select id="columnDropDown" onchange="GetExpression()"></select>' +
@@ -139,10 +143,6 @@
                 '<label>Condition:</label><br />' +
                 '<select id="conditionDropDown" disabled="disabled" onchange="EnableText()"></select>' +
             '</p>');
-            $('#wherePortion').append('<p>' +
-                '<label>Value:</label><br />' +
-                '<input id="valueText" type="text" disabled="disabled" onblur="TakeData()" />' +
-            '</p><br/><hr/>');
             var val = "";
             var text = "";
             $('#columnDropDown').removeOption(/./).addOption('', '---Please Select---');
@@ -151,6 +151,11 @@
                 text = tables[i].ColName;
                 $('#columnDropDown').append(new Option(text, val, true, true));
             }
+        }
+        function regIsNumber(fData)
+        {
+            var reg = new RegExp("^[-]?[0-9]+[\.]?[0-9]+$");
+            return reg.test(fData)
         }
         function GetExpression()
         {
@@ -175,21 +180,68 @@
         {
             alert(buttonType);
         }
+        function ValidateText(valueText)
+        {
+            var conditionText;
+            if (jQuery.inArray($("#columnDropDown option:selected").val(), numAndDate) > 0) {
+                var num = /^[-+]?[0-9]+(?:\.[0-9]+)?$/;
+                if (num.test(valueText)) {
+                    conditionText = valueText;
+                }
+                else {
+                    alert("Please enter valid number in the textbox");
+                    return false;
+                }
+            }
+            else {
+                conditionText = "'" + valueText + "'"
+            }
+            return conditionText;
+        }
         function TakeData()
         {
-            if ($('#valueText').val().length > 0) {
-                queryString = queryString.split(' WHERE')[0];
-                queryString = queryString + " WHERE " + $('#columnDropDown option:selected').text() +" "+ $('#conditionDropDown').val() + " " + $('#valueText').val();
-                $("#<%=queryTextBox.ClientID%>").val(queryString);
+            var checkedConditionText;
+            if ($('#conditionDropDown').val() == "BETWEEN")
+            {
+                checkedConditionText = ValidateText($('#val1').val()) + " AND " + ValidateText($('#val2').val());
             }
             else
             {
-                alert("Incomplete Where clause");
+                if ($('#valueText').val().length > 0) {
+                    checkedConditionText = ValidateText($('#valueText').val());
+                }
+                else {
+                    alert("Incomplete Where clause");
+                    return false;
+                }
             }
+            queryString = queryString.split(' WHERE')[0];
+            queryString = queryString + " WHERE " + $('#columnDropDown option:selected').text() + " " + $('#conditionDropDown').val() + " " + checkedConditionText;
+            $("#<%=queryTextBox.ClientID%>").val(queryString);
         }
         function EnableText()
         {
-            $('#valueText').attr('disabled',false);
+            $('#textBox').empty();
+            //$('#valueText').attr('disabled', false);
+            if ($('#conditionDropDown').val() == "BETWEEN") {
+                //alert("between");
+                $('#textBox').append('<p>' +
+               '<label>Value 1:</label><br />' +
+               '<input id="val1" type="text" />' +
+               '</p>');
+                $('#textBox').append('<p id="andOption">' +
+               '<label>AND</label>');
+                $('#textBox').append('<p>' +
+                '<label>Value 2:</label><br />' +
+                '<input id="val2" type="text" onblur="TakeData()" />' +
+                '</p><br/><hr/>');
+            }
+            else {
+                $('#textBox').append('<p>' +
+                '<label>Value:</label><br />' +
+                '<input id="valueText" type="text" onblur="TakeData()" />' +
+                '</p><br/><hr/>');
+            }
         }
     </script>
     <noscript>
@@ -229,6 +281,8 @@
                            <hr />
                            <input id="whereButton" type="button" value="WHERE" disabled="disabled" onclick="WhereButtonClick()" />
                            <div id ="wherePortion" class="selectQuery">
+                           </div>
+                           <div id="textBox">
                            </div>
                            <br />
                             <input id="andButton" type="button" value="AND" onclick="AndOrButton($(this).val())" />
