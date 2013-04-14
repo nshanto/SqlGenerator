@@ -133,16 +133,16 @@
             $('#wherePortion').empty();
             $('#wherePortion').append('<p>'+
                 '<label>Column Name:</label><br />'+
-                '<select id="columnDropDown" onchange="GetExpression()"></select>' +
+                '<select id="columnDropDown" class="dropDownListStyles" onchange="GetExpression()"></select>' +
             '</p>');
             $('#wherePortion').append('<p>' +
                 '<label>Condition:</label><br />' +
-                '<select id="conditionDropDown" disabled="disabled" onchange="EnableText()"></select>' +
+                '<select id="conditionDropDown" class="dropDownListStyles" disabled="disabled" onchange="EnableText()"></select>' +
             '</p>');
             $('#wherePortion').append('<p>' +
                 '<label>Value:</label><br />' +
-                '<input id="valueText" type="text" disabled="disabled" onblur="TakeData()" />' +
-            '</p><br/><hr/>');
+                '<input id="valueText" type="text" class="textBoxStyles" disabled="disabled" onblur="TakeData()" />' +
+            '</p><br/><hr class="hrStyle"/>');
             var val = "";
             var text = "";
             $('#columnDropDown').removeOption(/./).addOption('', '---Please Select---');
@@ -192,6 +192,8 @@
             $('#valueText').attr('disabled',false);
         }
     </script>
+
+
     <noscript>
         <meta http-equiv="refresh" content="0; url=JavascriptDisabled.html">
     </noscript>
@@ -199,60 +201,63 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <h1> SQL Generator</h1>
-        <div id="mainBody">
-            <div id="mainContents">
-                <asp:Label ID="sqlStatus" runat="server" Text=""></asp:Label>
-                <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-                <div>
-                    <asp:Button ID="connect" CssClass="buttonStyle" runat="server" Text="Establish Connection" OnClick="connect_Click" />
-                    <br />
-                    <asp:DropDownList ID="dbNameDropDown" runat="server" OnSelectedIndexChanged="dbNameDropDown_SelectedIndexChanged" AutoPostBack="True">
-                    </asp:DropDownList>
-                    <hr />
-                </div>
-                <div class="selectQuery">
-                    <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
-                       <ContentTemplate>
-                           <div>
-                               <p>From :</p>
-                               <asp:DropDownList ID="tableNameDropDown" runat="server"></asp:DropDownList>
-                               <div id="checkList" class="selectQuery">
-                               </div>
-                           </div>
-                           </ContentTemplate>
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="dbNameDropDown" EventName="SelectedIndexChanged" />
-                        </Triggers>
-                    </asp:UpdatePanel>
-                           <br />
-                           <hr />
-                           <input id="whereButton" type="button" value="WHERE" disabled="disabled" onclick="WhereButtonClick()" />
-                           <div id ="wherePortion" class="selectQuery">
-                           </div>
-                           <br />
-                            <input id="andButton" type="button" value="AND" onclick="AndOrButton($(this).val())" />
-                            <input id="orButton" type="button" value="OR" onclick="AndOrButton($(this).val())" />
-                           <div id="andOrPortion">
-                           </div>
-                    <br />
-                    <hr />
-                    <div id="outputText">
-                        <p>Query string :</p>
-                        <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled"></asp:TextBox>
-                        <asp:Button ID="resultButton" runat="server" Text="Get Result" OnClick="resultButton_Click" />
-                    </div>
-                    <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>
-                            <asp:GridView ID="resultGrid" runat="server"></asp:GridView>
-                        </ContentTemplate>
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="resultButton" EventName="Click" />
-                        </Triggers>
-                    </asp:UpdatePanel>
-                 
-                </div>           
-            </div>
+        
+        <div id="mainBody" runat="server">
+            <h1> SQL Generator</h1>
+            <asp:Panel id="mainContents" runat="server">
+                    <asp:Panel ID="AllControls" runat="server">       
+                        <div style="float : left; margin-left : 70px; margin-top : 50px;">
+                            <asp:Label ID="sqlStatus" runat="server" Text=""></asp:Label>
+                            <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+                            <div>
+                                <asp:Button ID="connect" CssClass="buttonStyles" runat="server" Text="Connect" OnClick="connect_Click" />
+                                <asp:DropDownList ID="dbNameDropDown" runat="server" OnSelectedIndexChanged="dbNameDropDown_SelectedIndexChanged" AutoPostBack="True" CssClass="dropDownListStyles">
+                                </asp:DropDownList>
+                                <hr class="hrStyle"/>
+                            </div>
+                            <div class="selectQuery">
+                                <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
+                                   <ContentTemplate>
+                                       <div>
+                                           <p>From :</p>
+                                           <asp:DropDownList ID="tableNameDropDown" runat="server" AutoPostBack="True" CssClass="dropDownListStyles"></asp:DropDownList>
+                                           <div id="checkList" class="selectQuery">
+                                           </div>
+                                       </div>
+                                       </ContentTemplate>
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="dbNameDropDown" EventName="SelectedIndexChanged" />
+                                    </Triggers>
+                                </asp:UpdatePanel>
+                                       <br />
+                                       <hr class="hrStyle"  />
+                                       <input id="whereButton" type="button" value="WHERE" disabled="disabled" onclick="WhereButtonClick()" class="buttonStyles" />
+                                       <div id ="wherePortion" class="selectQuery">
+                                       </div>
+                                       <br />
+                                        <input id="andButton" type="button" value="AND" onclick="AndOrButton($(this).val())" class="buttonStyles" width="900" />
+                                        <input id="orButton" type="button" value="OR" onclick="AndOrButton($(this).val())" class="buttonStyles" />
+                                       <div id="andOrPortion">
+                                       </div>
+                                <br />
+                                <hr class="hrStyle" />
+                                <div id="outputText">
+                                    <p>Query string :</p>
+                                    <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled"></asp:TextBox>
+                                    <asp:Button ID="resultButton" runat="server" Text="Get Result" OnClick="resultButton_Click" CssClass="buttonStyles" />
+                                </div>
+                                <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <asp:GridView ID="resultGrid" runat="server"></asp:GridView>
+                                    </ContentTemplate>
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="resultButton" EventName="Click" />
+                                    </Triggers>
+                                </asp:UpdatePanel>
+                            </div>  
+                        </div>
+                </asp:Panel>   
+            </asp:Panel>
          </div>
     </form>
 </body>

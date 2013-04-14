@@ -5,12 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using ConnectEngine.BLL.Classes;
 using ConnectEngine.BLL.Manager;
 using System.Web.Services;
 using System.Data;
 using System.ServiceProcess;
+using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 
 namespace ConnectEngine
 {
@@ -19,6 +20,8 @@ namespace ConnectEngine
         DBManager manager = new DBManager();
         protected void Page_Load(object sender, EventArgs e)
         {
+            //decorating css properties
+            //StylesAttributeSet();
             connect.Enabled = false;
             dbNameDropDown.Enabled = false;
             tableNameDropDown.Enabled = false;
@@ -92,7 +95,7 @@ namespace ConnectEngine
 
         protected void dbNameDropDown_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
+            //StylesAttributeSet();
             List<Tables> allTables = new List<Tables>();
             try
             {
@@ -146,6 +149,21 @@ namespace ConnectEngine
             {
                 throw new Exception("Error fetching data"+excp);
             }
+        }
+
+        protected void StylesAttributeSet()
+        {
+            //var dropDownLists = AllControls.Controls.OfType<DropDownList>();
+            //foreach (var dropDownList in dropDownLists)
+            //{
+            //    dropDownList.Attributes.Add("class", "dropDownListStyles");
+            //}
+
+            //var buttons = AllControls.Controls.OfType<Button>();
+            //foreach (var button in buttons) 
+            //{
+            //    button.Attributes.Add("class", "buttonStyles");
+            //}
         }
     }
 }
