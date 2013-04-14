@@ -152,17 +152,17 @@
                 '<label>Column Name:</label><br />'+
                 '<select id="columnDropDown" class="dropDownListStyles" onchange="GetExpression()"></select>' +
             '</p>');
+
             $('#wherePortion').append('<p>' +
                 '<label>Condition:</label><br />' +
                 '<select id="conditionDropDown" class="dropDownListStyles" disabled="disabled" onchange="EnableText()"></select>' +
             '</p>');
-<<<<<<< HEAD
+
             $('#wherePortion').append('<p>' +
                 '<label>Value:</label><br />' +
                 '<input id="valueText" type="text" class="textBoxStyles" disabled="disabled" onblur="TakeData()" />' +
             '</p><br/><hr class="hrStyle"/>');
-=======
->>>>>>> 9d644ea7cfb3b23ec9a4a412aab0deb855b87694
+
             var val = "";
             var text = "";
             $('#columnDropDown').removeOption(/./).addOption('', '---Please Select---');
@@ -308,7 +308,6 @@
 </head>
 <body>
     <form id="form1" runat="server">
-<<<<<<< HEAD
         
         <div id="mainBody" runat="server">
             <h1> SQL Generator</h1>
@@ -354,6 +353,7 @@
                                     <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled"></asp:TextBox>
                                     <asp:Button ID="resultButton" runat="server" Text="Get Result" OnClick="resultButton_Click" CssClass="buttonStyles" />
                                 </div>
+                                <br />
                                 <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <asp:GridView ID="resultGrid" runat="server"></asp:GridView>
@@ -366,63 +366,6 @@
                         </div>
                 </asp:Panel>   
             </asp:Panel>
-=======
-        <h1> SQL Generator</h1>
-        <div id="mainBody">
-            <div id="mainContents">
-                <asp:Label ID="sqlStatus" runat="server" Text=""></asp:Label>
-                <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
-                <div>
-                    <asp:Button ID="connect" CssClass="buttonStyle" runat="server" Text="Establish Connection" OnClick="connect_Click" />
-                    <br />
-                    <asp:DropDownList ID="dbNameDropDown" runat="server" OnSelectedIndexChanged="dbNameDropDown_SelectedIndexChanged" AutoPostBack="True">
-                    </asp:DropDownList>
-                    <hr />
-                </div>
-                <div class="selectQuery">
-                    <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
-                       <ContentTemplate>
-                           <div>
-                               <p>From :</p>
-                               <asp:DropDownList ID="tableNameDropDown" runat="server"></asp:DropDownList>
-                               <div id="checkList" class="selectQuery">
-                               </div>
-                           </div>
-                           </ContentTemplate>
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="dbNameDropDown" EventName="SelectedIndexChanged" />
-                        </Triggers>
-                    </asp:UpdatePanel>
-                           <br />
-                           <hr />
-                           <input id="whereButton" type="button" value="WHERE" disabled="disabled" onclick="WhereButtonClick()" />
-                           <div id ="wherePortion" class="selectQuery">
-                           </div>
-                           <div id="textBox">
-                           </div>
-                           <br />
-                            <input id="andButton" type="button" value="AND" onclick="AndOrButton($(this).val())" />
-                            <input id="orButton" type="button" value="OR" onclick="AndOrButton($(this).val())" />
-                           <div id="andOrPortion">
-                           </div>
-                    <br />
-                    <hr />
-                    <div id="outputText">
-                        <p>Query string :</p>
-                        <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled"></asp:TextBox>
-                        <asp:Button ID="resultButton" runat="server" Text="Get Result" OnClick="resultButton_Click" />
-                    </div>
-                    <asp:UpdatePanel ID="UpdatePanel2" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>
-                            <asp:GridView ID="resultGrid" runat="server"></asp:GridView>
-                        </ContentTemplate>
-                        <Triggers>
-                            <asp:AsyncPostBackTrigger ControlID="resultButton" EventName="Click" />
-                        </Triggers>
-                    </asp:UpdatePanel>
-                </div>           
-            </div>
->>>>>>> 9d644ea7cfb3b23ec9a4a412aab0deb855b87694
          </div>
     </form>
 </body>
