@@ -107,6 +107,8 @@
             var checkAny = false;
             $('#distinct').attr('disabled', true);
             $('#whereButton').attr('disabled', true);
+            $('#wherePortion').empty();
+            $('#textBox').empty();
             queryString = "";
             var str = [];
             $(':input[name="distinct"]:checked').each(function () {
@@ -284,7 +286,8 @@
                 }
 
             }
-            else {
+            else
+            {
                 $('#textBox').append('<p>' +
                 '<label>Value:</label><br />' +
                 '<input id="valueText" type="text" onblur="TakeData()" />' +
@@ -330,7 +333,7 @@
                            <input id="whereButton" type="button" value="WHERE" disabled="disabled" onclick="WhereButtonClick()" />
                            <div id ="wherePortion" class="selectQuery">
                            </div>
-                           <div id="textBox">
+                           <div id="textBox" class="selectQuery">
                            </div>
                            <br />
                             <input id="andButton" type="button" value="AND" onclick="AndOrButton($(this).val())" />
