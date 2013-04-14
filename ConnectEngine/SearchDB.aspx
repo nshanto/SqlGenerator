@@ -34,14 +34,27 @@
                 "<",
                 ">=",
                 "<=",
-                "BETWEEN"
+                "BETWEEN",
+                "NOT BETWEEN"
         ];
         var stringCondition = [
                 "LIKE",
                 "NOT LIKE",
                 "<>",
                 "=",
-                "BETWEEN"
+                "BETWEEN",
+                "NOT BETWEEN"
+        ];
+        var wildcard = [
+                "%str",
+                "str%",
+                "%str%",
+                "_str",
+                "str_",
+                "[str]%",
+                "%[str]",
+                "[!str]%",
+                "%[!str]"
         ];
         function GetColumnName()
         {
@@ -201,9 +214,28 @@
         function TakeData()
         {
             var checkedConditionText;
-            if ($('#conditionDropDown').val() == "BETWEEN")
+            if ($('#conditionDropDown').val() == "BETWEEN" || $('#conditionDropDown').val() == "NOT BETWEEN")
             {
-                checkedConditionText = ValidateText($('#val1').val()) + " AND " + ValidateText($('#val2').val());
+                if ($('#val1').val().length == 0 || $('#val2').val().length == 0) {
+                    alert("Incomplete Where clause");
+                    return false;
+                }
+                else {
+                    checkedConditionText = ValidateText($('#val1').val()) + " AND " + ValidateText($('#val2').val());
+                }
+            }
+            else if ($('#conditionDropDown').val() == "LIKE" || $('#conditionDropDown').val() == "NOT LIKE")
+            {
+                if ($('#likeValueText').val().length > 0)
+                {
+                    var str = "'"+$('#wildcardDropDown').val()+"'";
+                    checkedConditionText = str.replace('str', $('#likeValueText').val());
+                }
+                else
+                {
+                    alert("No value in the textbox");
+                    return false;
+                }
             }
             else
             {
@@ -223,7 +255,7 @@
         {
             $('#textBox').empty();
             //$('#valueText').attr('disabled', false);
-            if ($('#conditionDropDown').val() == "BETWEEN") {
+            if ($('#conditionDropDown').val() == "BETWEEN" || $('#conditionDropDown').val() == "NOT BETWEEN") {
                 //alert("between");
                 $('#textBox').append('<p>' +
                '<label>Value 1:</label><br />' +
@@ -235,6 +267,22 @@
                 '<label>Value 2:</label><br />' +
                 '<input id="val2" type="text" onblur="TakeData()" />' +
                 '</p><br/><hr/>');
+            }
+            else if ($('#conditionDropDown').val() == "LIKE" || $('#conditionDropDown').val() == "NOT LIKE")
+            {
+                $('#textBox').append('<p>' +
+                '<label>Value:</label><br />' +
+                '<input id="likeValueText" type="text" onblur="TakeData()" />' +
+                '</p><br/>');
+                $('#textBox').append('<p>' +
+                '<label>Select a wildcard:</label><br />' +
+                '<select id="wildcardDropDown" onchange="TakeData()"></select>' +
+            '</p><hr/>');
+                var itemNumber = wildcard.length;
+                for (var i = 0; i < itemNumber; i++) {
+                    $('#wildcardDropDown').append(new Option(wildcard[i], wildcard[i], true, true));
+                }
+
             }
             else {
                 $('#textBox').append('<p>' +
@@ -304,7 +352,6 @@
                             <asp:AsyncPostBackTrigger ControlID="resultButton" EventName="Click" />
                         </Triggers>
                     </asp:UpdatePanel>
-                 
                 </div>           
             </div>
          </div>
