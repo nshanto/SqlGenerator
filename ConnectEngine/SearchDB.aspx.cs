@@ -149,7 +149,7 @@ namespace ConnectEngine
             {
                 throw new Exception("Error fetching data"+excp);
             }
-        }
+       }
 
         protected void StylesAttributeSet()
         {

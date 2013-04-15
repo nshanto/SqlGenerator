@@ -348,7 +348,7 @@
                                 <hr class="hrStyle" />
                                 <div id="outputText">
                                     <p>Query string :</p>
-                                    <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled" ReadOnly="True"></asp:TextBox>
+                                    <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled"></asp:TextBox>
                                     <br /><br />
                                     <asp:Button ID="resultButton" runat="server" Text="Get Result" OnClick="resultButton_Click" CssClass="buttonStyles" />
                                 </div>
