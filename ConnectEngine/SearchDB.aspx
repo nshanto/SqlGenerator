@@ -262,24 +262,24 @@
                 //alert("between");
                 $('#textBox').append('<p>' +
                '<label>Value 1:</label><br />' +
-               '<input id="val1" type="text" />' +
+               '<input id="val1" class="textBoxStyles" title="Enter First Value" type="text" />' +
                '</p>');
                 $('#textBox').append('<p id="andOption">' +
                '<label>AND</label>');
                 $('#textBox').append('<p>' +
                 '<label>Value 2:</label><br />' +
-                '<input id="val2" type="text" onblur="TakeData()" />' +
-                '</p><br/><hr/>');
+                '<input id="val2" class="textBoxStyles" title="Enter Second Value" type="text" onblur="TakeData()" />' +
+                '</p><br/><hr class="hrStyle"/>');
             }
             else if ($('#conditionDropDown').val() == "LIKE" || $('#conditionDropDown').val() == "NOT LIKE")
             {
                 $('#textBox').append('<p>' +
                 '<label>Value:</label><br />' +
-                '<input id="likeValueText" type="text" onblur="TakeData()" />' +
+                '<input id="likeValueText" class="textBoxStyles" type="text" onblur="TakeData()" />' +
                 '</p><br/>');
                 $('#textBox').append('<p>' +
                 '<label>Select a wildcard:</label><br />' +
-                '<select id="wildcardDropDown" onchange="TakeData()"></select>' +
+                '<select id="wildcardDropDown" class="dropDownListStyles" onchange="TakeData()"></select>' +
             '</p><hr class="hrStyle"/>');
                 var itemNumber = wildcard.length;
                 for (var i = 0; i < itemNumber; i++) {
@@ -290,7 +290,7 @@
             else {
                 $('#textBox').append('<p>' +
                 '<label>Value:</label><br />' +
-                '<input id="valueText" type="text" onblur="TakeData()" />' +
+                '<input id="valueText" class="textBoxStyles" type="text" onblur="TakeData()" />' +
                 '</p><br/><hr class="hrStyle"/>');
             }
         }
@@ -306,7 +306,7 @@
     <form id="form1" runat="server">
         
         <div id="mainBody" runat="server">
-            <h1> SQL Generator</h1>
+            <h1 class="header1"> SQL Generator</h1>
             <asp:Panel id="mainContents" runat="server">
                     <asp:Panel ID="AllControls" runat="server">       
                         <div style="float : left; margin-left : 70px; margin-top : 50px;">
@@ -348,7 +348,8 @@
                                 <hr class="hrStyle" />
                                 <div id="outputText">
                                     <p>Query string :</p>
-                                    <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled"></asp:TextBox>
+                                    <asp:TextBox ID="queryTextBox" runat="server" Height="46px" TextMode="MultiLine" Width="442px" ViewStateMode="Enabled" ReadOnly="True"></asp:TextBox>
+                                    <br /><br />
                                     <asp:Button ID="resultButton" runat="server" Text="Get Result" OnClick="resultButton_Click" CssClass="buttonStyles" />
                                 </div>
                                 <br />
